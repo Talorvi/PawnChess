@@ -1,21 +1,3 @@
-<template>
-  <div id="app">
-    <HelloWorld />
-  </div>
-</template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
 .cm-chessboard .board.input-enabled .square {
   cursor: pointer; }
 
@@ -59,14 +41,14 @@ export default {
 .cm-chessboard.default .coordinates {
   pointer-events: none;
   user-select: none; }
-.cm-chessboard.default .coordinates .coordinate {
-  fill: #c5a076;
-  font-size: 7px;
-  cursor: default; }
-.cm-chessboard.default .coordinates .coordinate.black {
-  fill: #ecdab9; }
-.cm-chessboard.default .coordinates .coordinate.white {
-  fill: #c5a076; }
+  .cm-chessboard.default .coordinates .coordinate {
+    fill: #c5a076;
+    font-size: 7px;
+    cursor: default; }
+    .cm-chessboard.default .coordinates .coordinate.black {
+      fill: #ecdab9; }
+    .cm-chessboard.default .coordinates .coordinate.white {
+      fill: #c5a076; }
 
 .cm-chessboard.green .board .square.white {
   fill: #E0DDCC; }
@@ -91,14 +73,14 @@ export default {
 .cm-chessboard.green .coordinates {
   pointer-events: none;
   user-select: none; }
-.cm-chessboard.green .coordinates .coordinate {
-  fill: #4c946a;
-  font-size: 7px;
-  cursor: default; }
-.cm-chessboard.green .coordinates .coordinate.black {
-  fill: #E0DDCC; }
-.cm-chessboard.green .coordinates .coordinate.white {
-  fill: #4c946a; }
+  .cm-chessboard.green .coordinates .coordinate {
+    fill: #4c946a;
+    font-size: 7px;
+    cursor: default; }
+    .cm-chessboard.green .coordinates .coordinate.black {
+      fill: #E0DDCC; }
+    .cm-chessboard.green .coordinates .coordinate.white {
+      fill: #4c946a; }
 
 .cm-chessboard.blue .board .square.white {
   fill: #EBF0F5; }
@@ -123,14 +105,14 @@ export default {
 .cm-chessboard.blue .coordinates {
   pointer-events: none;
   user-select: none; }
-.cm-chessboard.blue .coordinates .coordinate {
-  fill: #678FB1;
-  font-size: 7px;
-  cursor: default; }
-.cm-chessboard.blue .coordinates .coordinate.black {
-  fill: #EBF0F5; }
-.cm-chessboard.blue .coordinates .coordinate.white {
-  fill: #678FB1; }
+  .cm-chessboard.blue .coordinates .coordinate {
+    fill: #678FB1;
+    font-size: 7px;
+    cursor: default; }
+    .cm-chessboard.blue .coordinates .coordinate.black {
+      fill: #EBF0F5; }
+    .cm-chessboard.blue .coordinates .coordinate.white {
+      fill: #678FB1; }
 
 .cm-chessboard.chess-club .board .square.white {
   fill: #E6D3B1; }
@@ -155,14 +137,14 @@ export default {
 .cm-chessboard.chess-club .coordinates {
   pointer-events: none;
   user-select: none; }
-.cm-chessboard.chess-club .coordinates .coordinate {
-  fill: #E6D3B1;
-  font-size: 7px;
-  cursor: default; }
-.cm-chessboard.chess-club .coordinates .coordinate.black {
-  fill: #E6D3B1; }
-.cm-chessboard.chess-club .coordinates .coordinate.white {
-  fill: #AF6B3F; }
+  .cm-chessboard.chess-club .coordinates .coordinate {
+    fill: #E6D3B1;
+    font-size: 7px;
+    cursor: default; }
+    .cm-chessboard.chess-club .coordinates .coordinate.black {
+      fill: #E6D3B1; }
+    .cm-chessboard.chess-club .coordinates .coordinate.white {
+      fill: #AF6B3F; }
 
 .cm-chessboard.chessboard-js .board .square.white {
   fill: #f0d9b5; }
@@ -187,14 +169,14 @@ export default {
 .cm-chessboard.chessboard-js .coordinates {
   pointer-events: none;
   user-select: none; }
-.cm-chessboard.chessboard-js .coordinates .coordinate {
-  fill: #404040;
-  font-size: 7px;
-  cursor: default; }
-.cm-chessboard.chessboard-js .coordinates .coordinate.black {
-  fill: #f0d9b5; }
-.cm-chessboard.chessboard-js .coordinates .coordinate.white {
-  fill: #b58863; }
+  .cm-chessboard.chessboard-js .coordinates .coordinate {
+    fill: #404040;
+    font-size: 7px;
+    cursor: default; }
+    .cm-chessboard.chessboard-js .coordinates .coordinate.black {
+      fill: #f0d9b5; }
+    .cm-chessboard.chessboard-js .coordinates .coordinate.white {
+      fill: #b58863; }
 
 .cm-chessboard.black-and-white .board .square.white {
   fill: #ffffff; }
@@ -219,12 +201,13 @@ export default {
 .cm-chessboard.black-and-white .coordinates {
   pointer-events: none;
   user-select: none; }
-.cm-chessboard.black-and-white .coordinates .coordinate {
-  fill: #9c9c9c;
-  font-size: 7px;
-  cursor: default; }
-.cm-chessboard.black-and-white .coordinates .coordinate.black {
-  fill: #ffffff; }
-.cm-chessboard.black-and-white .coordinates .coordinate.white {
-  fill: #9c9c9c; }
-</style>
+  .cm-chessboard.black-and-white .coordinates .coordinate {
+    fill: #9c9c9c;
+    font-size: 7px;
+    cursor: default; }
+    .cm-chessboard.black-and-white .coordinates .coordinate.black {
+      fill: #ffffff; }
+    .cm-chessboard.black-and-white .coordinates .coordinate.white {
+      fill: #9c9c9c; }
+
+/*# sourceMappingURL=cm-chessboard.css.map */
