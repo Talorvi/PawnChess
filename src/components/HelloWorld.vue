@@ -14,7 +14,11 @@ export default {
   name: 'HelloWorld',
   data() {
     return {
-      chessboard: null
+      chessboard: null,
+      points: {
+        white: 0,
+        black: 0
+      }
     }
   },
   methods: {
@@ -40,7 +44,7 @@ export default {
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
-            console.log(`moveStart: ${event.square}`)
+            console.log(`moveStart: ${event.square}`);
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
           case INPUT_EVENT_TYPE.moveDone:
@@ -50,6 +54,7 @@ export default {
             let result = this.validateMove(event.squareFrom, event.squareTo, 0);
 
             if (result) {
+              this.checkIfEdge(event.squareTo, 0);
               this.blackMove();
               return result;
             }
@@ -66,7 +71,7 @@ export default {
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
-            console.log(`moveStart: ${event.square}`)
+            console.log(`moveStart: ${event.square}`);
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
           case INPUT_EVENT_TYPE.moveDone:
@@ -76,6 +81,7 @@ export default {
             let result = this.validateMove(event.squareFrom, event.squareTo, 1);
 
             if (result) {
+              this.checkIfEdge(event.squareTo, 1);
               this.whiteMove();
               return result;
             }
@@ -89,6 +95,20 @@ export default {
     // eslint-disable-next-line no-unused-vars
     validateMove(squareFrom, squareTo, player) {
       return true;
+    },
+    addPoint(player) {
+      if (!player) {
+        this.points.white++;
+      }
+      else {
+        this.points.black++;
+      }
+      console.log(this.points);
+    },
+    checkIfEdge(square, player) {
+      if (square.includes("1") || square.includes("8")) {
+          this.addPoint(player);
+      }
     }
   },
   mounted() {
