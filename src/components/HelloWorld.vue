@@ -33,6 +33,7 @@ export default {
                 }
               });
       this.whiteMove();
+      console.log(this.chessboard);
     },
     whiteMove: function () {
       this.chessboard.disableMoveInput();
@@ -44,9 +45,17 @@ export default {
             return true;
           case INPUT_EVENT_TYPE.moveDone:
             console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
-            // return true, if input is accepted/valid, `false` takes the move back
-            this.blackMove();
-            return true;
+
+            // eslint-disable-next-line no-case-declarations
+            let result = this.validateMove(event.squareFrom, event.squareTo, 0);
+
+            if (result) {
+              this.blackMove();
+              return result;
+            }
+
+            return false;
+
           case INPUT_EVENT_TYPE.moveCanceled:
             console.log(`moveCanceled`)
         }
@@ -61,13 +70,25 @@ export default {
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
           case INPUT_EVENT_TYPE.moveDone:
-            console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`)
-            this.whiteMove();
-            return true;
+            console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
+
+            // eslint-disable-next-line no-case-declarations
+            let result = this.validateMove(event.squareFrom, event.squareTo, 1);
+
+            if (result) {
+              this.whiteMove();
+              return result;
+            }
+
+            return false;
           case INPUT_EVENT_TYPE.moveCanceled:
             console.log(`moveCanceled`)
         }
       }, COLOR.black)
+    },
+    // eslint-disable-next-line no-unused-vars
+    validateMove(squareFrom, squareTo, player) {
+      return true;
     }
   },
   mounted() {
