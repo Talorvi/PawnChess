@@ -2,6 +2,13 @@
   <div>
     <div class="hello">
       <div class="board" id="board1"></div>
+      <div class="leaderboard" id="leaderboard">
+        <div v-bind:class="{ active: !turn }">White: {{points.black}}</div>
+        <div v-bind:class="{ active: turn }">Black: {{points.white}}</div>
+      </div>
+      <div id="buttons">
+        <button type="button" v-on:click="turnAround">Turn around</button>
+      </div>
     </div>
   </div>
 </template>
@@ -18,7 +25,8 @@ export default {
       points: {
         white: 0,
         black: 0
-      }
+      },
+      turn: 0
     }
   },
   methods: {
@@ -37,18 +45,18 @@ export default {
                 }
               });
       this.whiteMove();
-      console.log(this.chessboard);
+      //console.log(this.chessboard);
     },
     whiteMove: function () {
       this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
-            console.log(`moveStart: ${event.square}`);
+            //console.log(`moveStart: ${event.square}`);
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
           case INPUT_EVENT_TYPE.moveDone:
-            console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
+            //console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
 
             // eslint-disable-next-line no-case-declarations
             let result = this.validateMove(event.squareFrom, event.squareTo, 0);
@@ -56,13 +64,14 @@ export default {
             if (result) {
               this.checkIfEdge(event.squareTo, 0);
               this.blackMove();
+              this.turn = !this.turn;
               return result;
             }
 
             return false;
 
           case INPUT_EVENT_TYPE.moveCanceled:
-            console.log(`moveCanceled`)
+            //console.log(`moveCanceled`)
         }
       }, COLOR.white)
     },
@@ -71,11 +80,11 @@ export default {
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
-            console.log(`moveStart: ${event.square}`);
+            //console.log(`moveStart: ${event.square}`);
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
           case INPUT_EVENT_TYPE.moveDone:
-            console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
+            //console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
 
             // eslint-disable-next-line no-case-declarations
             let result = this.validateMove(event.squareFrom, event.squareTo, 1);
@@ -83,12 +92,13 @@ export default {
             if (result) {
               this.checkIfEdge(event.squareTo, 1);
               this.whiteMove();
+              this.turn = !this.turn;
               return result;
             }
 
             return false;
           case INPUT_EVENT_TYPE.moveCanceled:
-            console.log(`moveCanceled`)
+            //console.log(`moveCanceled`)
         }
       }, COLOR.black)
     },
@@ -98,10 +108,10 @@ export default {
     },
     addPoint(player) {
       if (!player) {
-        this.points.white++;
+        this.points.black++;
       }
       else {
-        this.points.black++;
+        this.points.white++;
       }
       console.log(this.points);
     },
@@ -109,6 +119,9 @@ export default {
       if (square.includes("1") || square.includes("8")) {
           this.addPoint(player);
       }
+    },
+    turnAround: function () {
+      this.chessboard.setOrientation(this.chessboard.getOrientation() === 'w' ? 'b' : 'w');
     }
   },
   mounted() {
@@ -118,7 +131,10 @@ export default {
 </script>
 <style>
   .board {
-    height: 500px;
-    width: 500px;
+    max-width: 500px;
+    max-height: 100%;
+  }
+  .active {
+    font-weight: bold;
   }
 </style>
