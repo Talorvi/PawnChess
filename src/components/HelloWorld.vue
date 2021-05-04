@@ -32,22 +32,27 @@ export default {
   methods: {
     initBoard: function() {
       this.chessboard = new Chessboard(document.getElementById("board1"),
-              {
-                position: "pppppppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPPPPP",
-                sprite: {
-                  url: require("@/assets/images/chessboard-sprite-staunty.svg")
-                },
-                style: {
-                  cssClass: "default",
-                  showCoordinates: true, // show ranks and files
-                  borderType: BORDER_TYPE.thin, // thin: thin border, frame: wide border with coordinates in it, none: no border
-                  aspectRatio: 1 // height/width. Set to `undefined`, if you want to define it only in the css.
-                }
-              });
+        {
+          position: "pppppppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPPPPP",
+          sprite: {
+            url: require("@/assets/images/chessboard-sprite-staunty.svg")
+          },
+          style: {
+            cssClass: "default",
+            showCoordinates: true, // show ranks and files
+            borderType: BORDER_TYPE.thin, // thin: thin border, frame: wide border with coordinates in it, none: no border
+            aspectRatio: 1 // height/width. Set to `undefined`, if you want to define it only in the css.
+          }
+        });
       this.whiteMove();
       //console.log(this.chessboard);
     },
-    whiteMove: function () {
+    whiteMove: function (squareTo = null) {
+      if (squareTo) {
+        this.chessboard.setPiece(squareTo, undefined);
+      }
+
+      let destroyedPawn = null;
       this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
@@ -62,8 +67,12 @@ export default {
             let result = this.validateMove(event.squareFrom, event.squareTo, 0);
 
             if (result) {
-              this.checkIfEdge(event.squareTo, 0);
-              this.blackMove();
+              let edge = this.checkIfEdge(event.squareTo, 0);
+
+              if (edge) {
+                destroyedPawn = event.squareTo;
+              }
+              this.blackMove(destroyedPawn);
               this.turn = !this.turn;
               return result;
             }
@@ -73,9 +82,14 @@ export default {
           case INPUT_EVENT_TYPE.moveCanceled:
             //console.log(`moveCanceled`)
         }
-      }, COLOR.white)
+      }, COLOR.white);
     },
-    blackMove: function () {
+    blackMove: function (squareTo = null) {
+      if (squareTo) {
+        this.chessboard.setPiece(squareTo, undefined);
+      }
+
+      let destroyedPawn = null;
       this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
@@ -90,8 +104,13 @@ export default {
             let result = this.validateMove(event.squareFrom, event.squareTo, 1);
 
             if (result) {
-              this.checkIfEdge(event.squareTo, 1);
-              this.whiteMove();
+              let edge = this.checkIfEdge(event.squareTo, 1);
+
+              if (edge) {
+                destroyedPawn = event.squareTo;
+              }
+
+              this.whiteMove(destroyedPawn);
               this.turn = !this.turn;
               return result;
             }
@@ -100,7 +119,7 @@ export default {
           case INPUT_EVENT_TYPE.moveCanceled:
             //console.log(`moveCanceled`)
         }
-      }, COLOR.black)
+      }, COLOR.black);
     },
     // eslint-disable-next-line no-unused-vars
     validateMove(squareFrom, squareTo, player) {
@@ -113,12 +132,13 @@ export default {
       else {
         this.points.white++;
       }
-      console.log(this.points);
     },
     checkIfEdge(square, player) {
       if (square.includes("1") || square.includes("8")) {
           this.addPoint(player);
+          return true;
       }
+      return false;
     },
     turnAround: function () {
       this.chessboard.setOrientation(this.chessboard.getOrientation() === 'w' ? 'b' : 'w');
