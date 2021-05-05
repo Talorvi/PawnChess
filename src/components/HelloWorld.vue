@@ -31,7 +31,11 @@ export default {
         'a1','b1','c1','d1','e1','f1','g1','h1',
         'a2','b2','c2','d2','e2','f2','g2','h2',
         'a7','b7','c7','d7','e7','f7','g7','h7',
-        'a8','b8','c8','d8','e8','f8','g8','h8',])
+        'a8','b8','c8','d8','e8','f8','g8','h8',]),
+      board: {
+        height: ['1', '2', '3', '4', '5', '6', '7', '8'],
+        width: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+      }
     }
   },
   methods: {
@@ -56,12 +60,14 @@ export default {
       if (squareTo) {
         this.chessboard.setPiece(squareTo, undefined);
       }
+      //this.checkIfEnd();
 
       let destroyedPawn = null;
       this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
+            this.checkIfEnd();
             //console.log(`moveStart: ${event.square}`);
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
@@ -99,6 +105,7 @@ export default {
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
+            this.checkIfEnd();
             //console.log(`moveStart: ${event.square}`);
             // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
             return true;
@@ -181,6 +188,45 @@ export default {
     },
     turnAround: function () {
       this.chessboard.setOrientation(this.chessboard.getOrientation() === 'w' ? 'b' : 'w');
+    },
+    checkIfEnd: function () {
+      console.log(this.chessboard.getPosition());
+      // eslint-disable-next-line no-unused-vars
+      let validMoves = 0;
+      // eslint-disable-next-line no-unused-vars
+      this.board.width.forEach((w, i) => {
+        // eslint-disable-next-line no-unused-vars
+        this.board.height.forEach((h, j) => {
+          let pawn = this.chessboard.getPiece(w+h);
+          if (pawn) {
+            if (pawn === "wp") {
+              let moves;
+              if (this.notMoved.has(w+h)) {
+                moves = [
+                  w+this.board.height[j+1], this.board.width[i-1]+this.board.height[j+1], this.board.width[i+1]+this.board.height[j+1],
+                  w+this.board.height[j+2]
+                ];
+              } else {
+                moves = [w+this.board.height[j+1], this.board.width[i-1]+this.board.height[j+1], this.board.width[i+1]+this.board.height[j+1]];
+              }
+              // let
+              moves.forEach(move => {
+                try {
+                  let properMove = this.validateMove(w+h, move, 0);
+                  if (properMove) {
+                    validMoves++;
+                  }
+                } catch (e) {
+                  console.log("Unexpected error");
+                }
+              });
+            } else if (pawn === "bp") {
+              console.log("czarny");
+            }
+          }
+        });
+      });
+      console.log("Poprawnych ruchów " + validMoves);
     }
   },
   mounted() {
