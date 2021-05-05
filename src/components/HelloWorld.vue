@@ -131,7 +131,7 @@ export default {
       }, COLOR.black);
     },
     // eslint-disable-next-line no-unused-vars
-    validateMove(squareFrom, squareTo, player) {
+    validateMove(squareFrom, squareTo, player, check=false) {
       let colF = squareFrom.slice(0,1).charCodeAt(0);
       let rowF = squareFrom.slice(-1);
       let colT = squareTo.slice(0,1).charCodeAt(0);
@@ -142,13 +142,16 @@ export default {
             if((rowF-rowT===1 || (rowF-rowT===2 && this.notMoved.has(squareFrom)))
                     && this.chessboard.getPiece(squareTo)===undefined){
               if(rowF-rowT===2) {this.ep = squareTo;this.epturn=0;}
-              this.notMoved.delete(squareFrom);
+              if(!check)
+                this.notMoved.delete(squareFrom);
               return true;
             }}
           else if(Math.abs(colT-colF)===1 && rowF-rowT===1){
             if(this.chessboard.getPiece(squareTo)==='wp'){
-              this.notMoved.delete(squareFrom);
-              this.notMoved.delete(squareTo);
+              if(!check){
+                this.notMoved.delete(squareFrom);
+                this.notMoved.delete(squareTo);
+              }
               return true;
             }
             else if(this.ep===squareTo[0]+(parseInt(rowT)+1) && this.epturn===1){
@@ -164,13 +167,16 @@ export default {
             if((rowT-rowF===1 || (rowT-rowF===2 && this.notMoved.has(squareFrom)))
                     && this.chessboard.getPiece(squareTo)===undefined){
               if(rowT-rowF===2) {this.ep = squareTo;this.epturn=0;}
-              this.notMoved.delete(squareFrom);
+              if(!check)
+                this.notMoved.delete(squareFrom);
               return true;
             }}
           else if(Math.abs(colT-colF)===1 && rowT-rowF===1){
             if(this.chessboard.getPiece(squareTo)==='bp'){
-              this.notMoved.delete(squareFrom);
-              this.notMoved.delete(squareTo);
+              if(!check){
+                this.notMoved.delete(squareFrom);
+                this.notMoved.delete(squareTo);
+              }
               return true;
             }
             else if(this.ep===squareTo[0]+(parseInt(rowT)-1) && this.epturn===1){
