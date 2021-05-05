@@ -140,7 +140,7 @@ export default {
             this.notMoved.delete(squareFrom);
             return true;
             }}
-          else if(Math.abs(colT-colF)===1 && this.chessboard.getPiece(squareTo)==='wp'){
+          else if(Math.abs(colT-colF)===1 && rowF-rowT===1 && this.chessboard.getPiece(squareTo)==='wp'){
             this.notMoved.delete(squareFrom);
             this.notMoved.delete(squareTo);
             return true;
@@ -155,7 +155,7 @@ export default {
             this.notMoved.delete(squareFrom);
             return true;
             }}
-          else if(Math.abs(colT-colF)===1 && this.chessboard.getPiece(squareTo)==='bp'){
+          else if(Math.abs(colT-colF)===1 && rowT-rowF===1 && this.chessboard.getPiece(squareTo)==='bp'){
             this.notMoved.delete(squareFrom);
             this.notMoved.delete(squareTo);
             return true;
