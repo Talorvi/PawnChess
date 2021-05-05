@@ -37,7 +37,8 @@ export default {
         width: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
       },
       ep: undefined,
-      epturn: 0
+      epturn: 0,
+      destroyedPawn: null
     }
   },
   methods: {
@@ -61,8 +62,7 @@ export default {
       if (squareTo) {
         this.chessboard.setPiece(squareTo, undefined);
       }
-
-      let destroyedPawn = null;
+      this.destroyedPawn = null;
       this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
@@ -82,9 +82,9 @@ export default {
               let edge = this.checkIfEdge(event.squareTo, 0);
 
               if (edge) {
-                destroyedPawn = event.squareTo;
+                this.destroyedPawn = event.squareTo;
               }
-              this.blackMove(destroyedPawn);
+              this.blackMove(this.destroyedPawn);
               this.turn = !this.turn;
               return result;
             }
@@ -101,7 +101,7 @@ export default {
         this.chessboard.setPiece(squareTo, undefined);
       }
 
-      let destroyedPawn = null;
+      this.destroyedPawn = null;
       this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
@@ -121,10 +121,10 @@ export default {
               let edge = this.checkIfEdge(event.squareTo, 1);
 
               if (edge) {
-                destroyedPawn = event.squareTo;
+                this.destroyedPawn = event.squareTo;
               }
 
-              this.whiteMove(destroyedPawn);
+              this.whiteMove(this.destroyedPawn);
               this.turn = !this.turn;
               return result;
             }
@@ -159,7 +159,7 @@ export default {
               return true;
             }
             else if(this.ep===squareTo[0]+(parseInt(rowT)+1) && this.epturn===1){
-              if(!check) this.chessboard.setPiece(this.ep,undefined);
+              if(!check) this.destroyedPawn = this.ep;
               return true;
             }
           }
@@ -184,7 +184,7 @@ export default {
               return true;
             }
             else if(this.ep===squareTo[0]+(parseInt(rowT)-1) && this.epturn===1){
-              if(!check) this.chessboard.setPiece(this.ep,undefined);
+              if(!check) this.destroyedPawn = this.ep;
               return true;
             }
           }
