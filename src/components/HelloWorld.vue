@@ -31,11 +31,13 @@ export default {
         'a1','b1','c1','d1','e1','f1','g1','h1',
         'a2','b2','c2','d2','e2','f2','g2','h2',
         'a7','b7','c7','d7','e7','f7','g7','h7',
-        'a8','b8','c8','d8','e8','f8','g8','h8',]),
+        'a8','b8','c8','d8','e8','f8','g8','h8']),
       board: {
         height: ['1', '2', '3', '4', '5', '6', '7', '8'],
         width: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-      }
+      },
+      ep: undefined,
+      epturn: 0
     }
   },
   methods: {
@@ -60,7 +62,6 @@ export default {
       if (squareTo) {
         this.chessboard.setPiece(squareTo, undefined);
       }
-      //this.checkIfEnd();
 
       let destroyedPawn = null;
       this.chessboard.disableMoveInput();
@@ -76,6 +77,7 @@ export default {
 
             // eslint-disable-next-line no-case-declarations
             let result = this.validateMove(event.squareFrom, event.squareTo, 0);
+            this.epturn++;
 
             if (result) {
               let edge = this.checkIfEdge(event.squareTo, 0);
@@ -114,6 +116,7 @@ export default {
 
             // eslint-disable-next-line no-case-declarations
             let result = this.validateMove(event.squareFrom, event.squareTo, 1);
+            this.epturn++;
 
             if (result) {
               let edge = this.checkIfEdge(event.squareTo, 1);
@@ -134,7 +137,7 @@ export default {
       }, COLOR.black);
     },
     // eslint-disable-next-line no-unused-vars
-    validateMove(squareFrom, squareTo, player) {
+    validateMove(squareFrom, squareTo, player, check=false) {
       let colF = squareFrom.slice(0,1).charCodeAt(0);
       let rowF = squareFrom.slice(-1);
       let colT = squareTo.slice(0,1).charCodeAt(0);
@@ -144,13 +147,23 @@ export default {
           if(colT===colF){
             if((rowF-rowT===1 || (rowF-rowT===2 && this.notMoved.has(squareFrom)))
                     && this.chessboard.getPiece(squareTo)===undefined){
-            this.notMoved.delete(squareFrom);
-            return true;
+              if(rowF-rowT===2) {this.ep = squareTo;this.epturn=0;}
+              if(!check)
+                this.notMoved.delete(squareFrom);
+              return true;
             }}
-          else if(Math.abs(colT-colF)===1 && this.chessboard.getPiece(squareTo)==='wp'){
-            this.notMoved.delete(squareFrom);
-            this.notMoved.delete(squareTo);
-            return true;
+          else if(Math.abs(colT-colF)===1 && rowF-rowT===1){
+            if(this.chessboard.getPiece(squareTo)==='wp'){
+              if(!check){
+                this.notMoved.delete(squareFrom);
+                this.notMoved.delete(squareTo);
+              }
+              return true;
+            }
+            else if(this.ep===squareTo[0]+(parseInt(rowT)+1) && this.epturn===1){
+              this.chessboard.setPiece(this.ep,undefined);
+              return true;
+            }
           }
         }
       }
@@ -159,13 +172,23 @@ export default {
           if(colT===colF){
             if((rowT-rowF===1 || (rowT-rowF===2 && this.notMoved.has(squareFrom)))
                     && this.chessboard.getPiece(squareTo)===undefined){
-            this.notMoved.delete(squareFrom);
-            return true;
+              if(rowT-rowF===2) {this.ep = squareTo;this.epturn=0;}
+              if(!check)
+                this.notMoved.delete(squareFrom);
+              return true;
             }}
-          else if(Math.abs(colT-colF)===1 && this.chessboard.getPiece(squareTo)==='bp'){
-            this.notMoved.delete(squareFrom);
-            this.notMoved.delete(squareTo);
-            return true;
+          else if(Math.abs(colT-colF)===1 && rowT-rowF===1){
+            if(this.chessboard.getPiece(squareTo)==='bp'){
+              if(!check){
+                this.notMoved.delete(squareFrom);
+                this.notMoved.delete(squareTo);
+              }
+              return true;
+            }
+            else if(this.ep===squareTo[0]+(parseInt(rowT)-1) && this.epturn===1){
+              this.chessboard.setPiece(this.ep,undefined);
+              return true;
+            }
           }
         }
       }
