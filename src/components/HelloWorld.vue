@@ -56,7 +56,6 @@ export default {
           }
         });
       this.whiteMove();
-      //console.log(this.chessboard);
     },
     whiteMove: function (squareTo = null) {
       if (squareTo) {
@@ -136,7 +135,6 @@ export default {
         }
       }, COLOR.black);
     },
-    // eslint-disable-next-line no-unused-vars
     validateMove(squareFrom, squareTo, player, check=false) {
       let colF = squareFrom.slice(0,1).charCodeAt(0);
       let rowF = squareFrom.slice(-1);
@@ -213,12 +211,10 @@ export default {
       this.chessboard.setOrientation(this.chessboard.getOrientation() === 'w' ? 'b' : 'w');
     },
     checkIfEnd: function () {
-      console.log(this.chessboard.getPosition());
-      // eslint-disable-next-line no-unused-vars
-      let validMoves = 0;
-      // eslint-disable-next-line no-unused-vars
+      let whiteValidMoves = 0;
+      let blackValidMoves = 0;
+      let gameFinished = false;
       this.board.width.forEach((w, i) => {
-        // eslint-disable-next-line no-unused-vars
         this.board.height.forEach((h, j) => {
           let pawn = this.chessboard.getPiece(w+h);
           if (pawn) {
@@ -230,26 +226,68 @@ export default {
                   w+this.board.height[j+2]
                 ];
               } else {
-                moves = [w+this.board.height[j+1], this.board.width[i-1]+this.board.height[j+1], this.board.width[i+1]+this.board.height[j+1]];
+                moves = [
+                  w+this.board.height[j+1], this.board.width[i-1]+this.board.height[j+1], this.board.width[i+1]+this.board.height[j+1]
+                ];
               }
-              // let
               moves.forEach(move => {
                 try {
-                  let properMove = this.validateMove(w+h, move, 0);
+                  let properMove = this.validateMove(w+h, move, 0, true);
                   if (properMove) {
-                    validMoves++;
+                    whiteValidMoves++;
                   }
                 } catch (e) {
                   console.log("Unexpected error");
                 }
               });
             } else if (pawn === "bp") {
-              console.log("czarny");
+              let moves;
+              if (this.notMoved.has(w+h)) {
+                moves = [
+                  w+this.board.height[j-1], this.board.width[i-1]+this.board.height[j-1], this.board.width[i+1]+this.board.height[j-1],
+                  w+this.board.height[j-2]
+                ];
+              } else {
+                moves = [
+                  w+this.board.height[j-1], this.board.width[i-1]+this.board.height[j-1], this.board.width[i+1]+this.board.height[j-1]
+                ];
+              }
+              moves.forEach(move => {
+                try {
+                  let properMove = this.validateMove(w+h, move, 1, true);
+                  if (properMove) {
+                    blackValidMoves++;
+                  }
+                } catch (e) {
+                  console.log("Unexpected error");
+                }
+              });
             }
           }
         });
       });
-      console.log("Poprawnych ruchów " + validMoves);
+      console.log("White valid moves: " + whiteValidMoves);
+      console.log("Black valid moves: " + blackValidMoves);
+      if (!this.turn && !whiteValidMoves) {
+        console.log("Koniec gry od białych");
+        gameFinished = true;
+      }
+      else if (this.turn && !blackValidMoves) {
+        console.log("Koniec gry od czarnych");
+        gameFinished = true;
+      }
+      if (gameFinished) {
+        this.chessboard.disableMoveInput();
+        if (this.points.white > this.points.black) {
+          alert("Białe wygrały!");
+        }
+        else if (this.points.white < this.points.black) {
+          alert("Czarne wygrały!");
+        }
+        else {
+          alert("Remis!");
+        }
+      }
     }
   },
   mounted() {
