@@ -145,7 +145,7 @@ export default {
           if(colT===colF){
             if((rowF-rowT===1 || (rowF-rowT===2 && this.notMoved.has(squareFrom)))
                     && this.chessboard.getPiece(squareTo)===undefined){
-              if(rowF-rowT===2) {this.ep = squareTo;this.epturn=0;}
+              if(rowF-rowT===2 && !check) {this.ep = squareTo; this.epturn=0;}
               if(!check)
                 this.notMoved.delete(squareFrom);
               return true;
@@ -159,7 +159,7 @@ export default {
               return true;
             }
             else if(this.ep===squareTo[0]+(parseInt(rowT)+1) && this.epturn===1){
-              this.chessboard.setPiece(this.ep,undefined);
+              if(!check) this.chessboard.setPiece(this.ep,undefined);
               return true;
             }
           }
@@ -170,7 +170,7 @@ export default {
           if(colT===colF){
             if((rowT-rowF===1 || (rowT-rowF===2 && this.notMoved.has(squareFrom)))
                     && this.chessboard.getPiece(squareTo)===undefined){
-              if(rowT-rowF===2) {this.ep = squareTo;this.epturn=0;}
+              if(rowT-rowF===2 && !check) {this.ep = squareTo; this.epturn=0;}
               if(!check)
                 this.notMoved.delete(squareFrom);
               return true;
@@ -184,7 +184,7 @@ export default {
               return true;
             }
             else if(this.ep===squareTo[0]+(parseInt(rowT)-1) && this.epturn===1){
-              this.chessboard.setPiece(this.ep,undefined);
+              if(!check) this.chessboard.setPiece(this.ep,undefined);
               return true;
             }
           }
