@@ -278,10 +278,10 @@ export default {
       }
       if (gameFinished) {
         this.chessboard.disableMoveInput();
-        if (this.points.white > this.points.black) {
+        if (this.points.white < this.points.black) {
           alert("Białe wygrały!");
         }
-        else if (this.points.white < this.points.black) {
+        else if (this.points.white > this.points.black) {
           alert("Czarne wygrały!");
         }
         else {
