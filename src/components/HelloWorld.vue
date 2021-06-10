@@ -56,14 +56,14 @@ export default {
             aspectRatio: 1 // height/width. Set to `undefined`, if you want to define it only in the css.
           }
         });
-      this.whiteMove();
+      this.move(0);
     },
-    whiteMove: function (squareTo = null) {
+    move: function (player, squareTo = null) {
+      this.chessboard.disableMoveInput();
       if (squareTo) {
         this.chessboard.setPiece(squareTo, undefined);
       }
       this.destroyedPawn = null;
-      this.chessboard.disableMoveInput();
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
           case INPUT_EVENT_TYPE.moveStart:
@@ -75,65 +75,23 @@ export default {
             //console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
 
             // eslint-disable-next-line no-case-declarations
-            let result = this.validateMove(event.squareFrom, event.squareTo, 0);
+            let result = this.validateMove(event.squareFrom, event.squareTo, player);
             this.epturn++;
-
             if (result) {
-              let edge = this.checkIfEdge(event.squareTo, 0);
+              let edge = this.checkIfEdge(event.squareTo, player);
 
               if (edge) {
                 this.destroyedPawn = event.squareTo;
               }
-              this.blackMove(this.destroyedPawn);
+              this.move(!player,this.destroyedPawn);
               this.turn = !this.turn;
               return result;
             }
-
-            return false;
-
-          case INPUT_EVENT_TYPE.moveCanceled:
-            //console.log(`moveCanceled`)
-        }
-      }, COLOR.white);
-    },
-    blackMove: function (squareTo = null) {
-      if (squareTo) {
-        this.chessboard.setPiece(squareTo, undefined);
-      }
-
-      this.destroyedPawn = null;
-      this.chessboard.disableMoveInput();
-      this.chessboard.enableMoveInput((event) => {
-        switch (event.type) {
-          case INPUT_EVENT_TYPE.moveStart:
-            this.checkIfEnd();
-            //console.log(`moveStart: ${event.square}`);
-            // return `true`, if input is accepted/valid, `false` aborts the interaction, the piece will not move
-            return true;
-          case INPUT_EVENT_TYPE.moveDone:
-            //console.log(`moveDone: ${event.squareFrom}-${event.squareTo}`);
-
-            // eslint-disable-next-line no-case-declarations
-            let result = this.validateMove(event.squareFrom, event.squareTo, 1);
-            this.epturn++;
-
-            if (result) {
-              let edge = this.checkIfEdge(event.squareTo, 1);
-
-              if (edge) {
-                this.destroyedPawn = event.squareTo;
-              }
-
-              this.whiteMove(this.destroyedPawn);
-              this.turn = !this.turn;
-              return result;
-            }
-
             return false;
           case INPUT_EVENT_TYPE.moveCanceled:
-            //console.log(`moveCanceled`)
+                //console.log(`moveCanceled`)
         }
-      }, COLOR.black);
+      }, player ? COLOR.black : COLOR.white);
     },
     validateMove(squareFrom, squareTo, player, check=false) {
       let colF = squareFrom.slice(0,1).charCodeAt(0);
