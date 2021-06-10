@@ -58,11 +58,13 @@ export default {
         });
       this.move(0);
     },
-    move: function (player, squareTo = null) {
+    move: function (player/*, squareTo = null*/) {
       this.chessboard.disableMoveInput();
-      if (squareTo) {
+      /*if (squareTo) {
+        console.log(player)
+        console.log(this.chessboard.getPosition());
         this.chessboard.setPiece(squareTo, undefined);
-      }
+      }*/
       this.destroyedPawn = null;
       this.chessboard.enableMoveInput((event) => {
         switch (event.type) {
@@ -83,7 +85,9 @@ export default {
               if (edge) {
                 this.destroyedPawn = event.squareTo;
               }
-              this.move(!player,this.destroyedPawn);
+              if(this.destroyedPawn != null)
+                this.chessboard.setPiece(this.destroyedPawn, undefined)
+              this.move(!player/*,this.destroyedPawn*/);
               this.turn = !this.turn;
               return result;
             }
@@ -224,8 +228,8 @@ export default {
           }
         });
       });
-      console.log("White valid moves: " + whiteValidMoves);
-      console.log("Black valid moves: " + blackValidMoves);
+      /*console.log("White valid moves: " + whiteValidMoves);
+      console.log("Black valid moves: " + blackValidMoves);*/
       if (!this.turn && !whiteValidMoves) {
         console.log("Koniec gry od białych");
         gameFinished = true;
